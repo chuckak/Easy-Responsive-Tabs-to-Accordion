@@ -31,67 +31,57 @@
                     $respTabsList = $respTabs.find('ul.resp-tabs-list'),
                     respTabsId = $respTabs.attr('id'),
                     matches = hash.match(new RegExp(respTabsId + "([0-9]+)")),
-                    count = 0,
-                    tabNum = 0;
+                    tabCount = 0,
+                    tabNum = 0,
+					jtab_options = function () { //Properties Function
+						$respTabs.css({
+							'display': 'block',
+							'width': options.width
+						});
+						switch (options.type) {
+							case vtabs:
+								$respTabs.addClass('resp-vtabs');
+							case accord:
+								$respTabs.addClass('resp-easy-accordion');
+								$respTabs.find('.resp-tabs-list').css('display', 'none');
+						}
+						if (options.fit === true) {
+							$respTabs.css({ width: '100%', margin: '0px' });
+						}
+					};
 
-                $respTabs.find('ul.resp-tabs-list li').addClass('resp-tab-item');
-                $respTabs.css({
-                    'display': 'block',
-                    'width': options.width
-                });
-
-                $respTabs.find('.resp-tabs-container > div').addClass('resp-tab-content');
-
-                //Properties Function
-                function jtab_options() {
-                    if (options.type === vtabs) {
-                        $respTabs.addClass('resp-vtabs');
-                    }
-                    if (options.fit === true) {
-                        $respTabs.css({ width: '100%', margin: '0px' });
-                    }
-                    if (options.type === accord) {
-                        $respTabs.addClass('resp-easy-accordion');
-                        $respTabs.find('.resp-tabs-list').css('display', 'none');
-                    }
-                }
                 jtab_options();
 
+				$respTabs.find('ul.resp-tabs-list li').addClass('resp-tab-item');
+				$respTabs.find('.resp-tabs-container > div').addClass('resp-tab-content');
+				
                 //Assigning the h2 markup to accordion title
                 $respTabs.find('.resp-tab-content').before("<h2 class='resp-accordion' role='tab'><span class='resp-arrow'></span></h2>");
 
-                $respTabs.find('.resp-accordion').each(function () {
-                    var $tabItem = $respTabs.find('.resp-tab-item:eq(' + count + ')'),
-                        $accItem = $respTabs.find('.resp-accordion:eq(' + count + ')'),
-                        $tabItemh2 = $(this);
-                    $accItem.append($tabItem.html());
-                    $accItem.data($tabItem.data());
-                    $tabItemh2.attr('aria-controls', 'tab_item-' + count);
-                    count = count + 1;
+                $respTabs.find('.resp-accordion').each(function (i) {
+                    var $tabItem = $respTabs.find('.resp-tab-item:eq(' + i + ')'),
+                        $accItem = $respTabs.find('.resp-accordion:eq(' + i + ')');
+                    $accItem.append($tabItem.html()).data($tabItem.data());
+                    $(this).attr('aria-controls', 'tab_item-' + i);
                 });
 
                 //Assigning the 'aria-controls' to Tab items
-                count = 0;
                 $respTabs.find('.resp-tab-item').each(function () {
-                    var $tabItem = $(this),
-                        tabcount = 0;
-                    $tabItem.attr('aria-controls', 'tab_item-' + count);
-                    $tabItem.attr('role', 'tab');
+                    $(this).attr('aria-controls', 'tab_item-' + tabCount);
+                    $(this).attr('role', 'tab');
 
                     //Assigning the 'aria-labelledby' attr to tab-content
-                    $respTabs.find('.resp-tab-content').each(function () {
-                        var $tabContent = $(this);
-                        $tabContent.attr('aria-labelledby', 'tab_item-' + tabcount);
-                        tabcount = tabcount + 1;
+                    $respTabs.find('.resp-tab-content').each(function (i) {
+                        $(this).attr('aria-labelledby', 'tab_item-' + i);
                     });
-                    count = count + 1;
+                    tabCount = tabCount + 1;
                 });
 
                 // Show correct content area
                 if (hash !== '') {
                     if (matches !== null && matches.length === 2) {
                         tabNum = parseInt(matches[1], 10) - 1;
-                        if (tabNum > count) {
+                        if (tabNum > tabCount) {
                             tabNum = 0;
                         }
                     }
@@ -110,11 +100,9 @@
 
                 //Tab Click action function
                 $respTabs.find("[role=tab]").each(function () {
-
-                    var $currentTab = $(this);
-                    $currentTab.click(function () {
-                        $currentTab = $(this);
-                        var $tabAria = $currentTab.attr('aria-controls'),
+                    $(this).click(function () {
+                        var $currentTab = $(this);
+                            $tabAria = $currentTab.attr('aria-controls'),
                             currentHash = window.location.hash,
                             newHash = respTabsId + (parseInt($tabAria.substring(9), 10) + 1).toString(),
                             re = new RegExp(respTabsId + "[0-9]+");
@@ -162,4 +150,4 @@
             });
         }
     });
-}(jQuery));
+})(jQuery);
