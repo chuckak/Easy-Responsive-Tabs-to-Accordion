@@ -17,7 +17,7 @@
                 historyApi = !!(window.history && history.replaceState);
 
             //Events
-            $(this).bind('tabactivate', function (e, currentTab) {
+            $(this).bind('resp-tab-activate', function (e, currentTab) {
                 if (typeof options.activate === 'function') {
                     options.activate.call(currentTab, e);
                 }
@@ -63,17 +63,17 @@
                     var $tabItem = $respTabs.find('.resp-tab-item:eq(' + i + ')'),
                         $accItem = $respTabs.find('.resp-accordion:eq(' + i + ')');
                     $accItem.append($tabItem.html()).data($tabItem.data());
-                    $(this).attr('aria-controls', 'tab_item-' + i);
+                    $(this).attr('resp-controls', 'tab_item-' + i);
                 });
 
-                //Assigning the 'aria-controls' to Tab items
+                //Assigning the 'resp-controls' to Tab items
                 $respTabs.find('.resp-tab-item').each(function () {
-                    $(this).attr('aria-controls', 'tab_item-' + tabCount);
+                    $(this).attr('resp-controls', 'tab_item-' + tabCount);
                     $(this).attr('role', 'tab');
 
-                    //Assigning the 'aria-labelledby' attr to tab-content
+                    //Assigning the 'resp-labelledby' attr to tab-content
                     $respTabs.find('.resp-tab-content').each(function (i) {
-                        $(this).attr('aria-labelledby', 'tab_item-' + i);
+                        $(this).attr('resp-labelledby', 'tab_item-' + i);
                     });
                     tabCount = tabCount + 1;
                 });
@@ -103,9 +103,9 @@
                 $respTabs.find('[role=tab]').each(function () {
                     $(this).click(function () {
                         var $currentTab = $(this),
-                            $tabAria = $currentTab.attr('aria-controls'),
+                            $tabControls = $currentTab.attr('resp-controls'),
                             currentHash = window.location.hash,
-                            newHash = respTabsId + (parseInt($tabAria.substring(9), 10) + 1).toString();
+                            newHash = respTabsId + (parseInt($tabControls.substring(9), 10) + 1).toString();
 
                         if ($currentTab.hasClass('resp-accordion') && $currentTab.hasClass('resp-tab-active')) {
                             $respTabs.find('.resp-tab-content-active').slideUp('', function () { $(this).addClass('resp-accordion-closed'); });
@@ -115,17 +115,17 @@
                         if (!$currentTab.hasClass('resp-tab-active') && $currentTab.hasClass('resp-accordion')) {
                             $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
                             $respTabs.find('.resp-tab-content-active').slideUp().removeClass('resp-tab-content-active resp-accordion-closed');
-                            $respTabs.find('[aria-controls=' + $tabAria + ']').addClass('resp-tab-active');
+                            $respTabs.find('[resp-controls=' + $tabControls + ']').addClass('resp-tab-active');
 
-                            $respTabs.find('.resp-tab-content[aria-labelledby = ' + $tabAria + ']').slideDown().addClass('resp-tab-content-active');
+                            $respTabs.find('.resp-tab-content[resp-labelledby = ' + $tabControls + ']').slideDown().addClass('resp-tab-content-active');
                         } else {
                             $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
                             $respTabs.find('.resp-tab-content-active').removeAttr('style').removeClass('resp-tab-content-active').removeClass('resp-accordion-closed');
-                            $respTabs.find('[aria-controls=' + $tabAria + ']').addClass('resp-tab-active');
-                            $respTabs.find('.resp-tab-content[aria-labelledby = ' + $tabAria + ']').addClass('resp-tab-content-active').attr('style', 'display:block');
+                            $respTabs.find('[resp-controls=' + $tabControls + ']').addClass('resp-tab-active');
+                            $respTabs.find('.resp-tab-content[resp-labelledby = ' + $tabControls + ']').addClass('resp-tab-content-active').attr('style', 'display:block');
                         }
                         //Trigger tab activation event
-                        $currentTab.trigger('tabactivate', $currentTab);
+                        $currentTab.trigger('resp-tab-activate', $currentTab);
 
                         //Update Browser History
                         if (historyApi) {
