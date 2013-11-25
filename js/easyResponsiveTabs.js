@@ -13,8 +13,6 @@
                     activate: function () { return false; }
                 },
                 options = $.extend(defaults, opts),
-                vtabs = 'vertical',
-                accord = 'accordion',
                 hash = window.location.hash,
                 historyApi = !!(window.history && history.replaceState);
 
@@ -30,33 +28,35 @@
                 var $respTabs = $(this),
                     $respTabsList = $respTabs.find('ul.resp-tabs-list'),
                     respTabsId = $respTabs.attr('id'),
-                    matches = hash.match(new RegExp(respTabsId + "([0-9]+)")),
+                    matches = hash.match(new RegExp(respTabsId + '([0-9]+)')),
                     tabCount = 0,
                     tabNum = 0,
-					jtab_options = function () { //Properties Function
+					tabOptions = function () { //Properties Function
 						$respTabs.css({
 							'display': 'block',
 							'width': options.width
 						});
 						switch (options.type) {
-							case vtabs:
+							case 'vertical':
 								$respTabs.addClass('resp-vtabs');
-							case accord:
+								break;
+							case 'accordion':
 								$respTabs.addClass('resp-easy-accordion');
 								$respTabs.find('.resp-tabs-list').css('display', 'none');
+								break;
 						}
-						if (options.fit === true) {
+						if (options.fit == true) {
 							$respTabs.css({ width: '100%', margin: '0px' });
 						}
 					};
 
-                jtab_options();
+                tabOptions();
 
 				$respTabs.find('ul.resp-tabs-list li').addClass('resp-tab-item');
 				$respTabs.find('.resp-tabs-container > div').addClass('resp-tab-content');
 				
                 //Assigning the h2 markup to accordion title
-                $respTabs.find('.resp-tab-content').before("<h2 class='resp-accordion' role='tab'><span class='resp-arrow'></span></h2>");
+                $respTabs.find('.resp-tab-content').before('<h2 class="resp-accordion" role="tab"><span class="resp-arrow"></span></h2>');
 
                 $respTabs.find('.resp-accordion').each(function (i) {
                     var $tabItem = $respTabs.find('.resp-tab-item:eq(' + i + ')'),
@@ -99,13 +99,13 @@
                 }
 
                 //Tab Click action function
-                $respTabs.find("[role=tab]").each(function () {
+                $respTabs.find('[role=tab]').each(function () {
                     $(this).click(function () {
-                        var $currentTab = $(this);
+                        var $currentTab = $(this),
                             $tabAria = $currentTab.attr('aria-controls'),
                             currentHash = window.location.hash,
                             newHash = respTabsId + (parseInt($tabAria.substring(9), 10) + 1).toString(),
-                            re = new RegExp(respTabsId + "[0-9]+");
+                            re = new RegExp(respTabsId + '[0-9]+');
 
                         if ($currentTab.hasClass('resp-accordion') && $currentTab.hasClass('resp-tab-active')) {
                             $respTabs.find('.resp-tab-content-active').slideUp('', function () { $(this).addClass('resp-accordion-closed'); });
@@ -115,13 +115,13 @@
                         if (!$currentTab.hasClass('resp-tab-active') && $currentTab.hasClass('resp-accordion')) {
                             $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
                             $respTabs.find('.resp-tab-content-active').slideUp().removeClass('resp-tab-content-active resp-accordion-closed');
-                            $respTabs.find("[aria-controls=" + $tabAria + "]").addClass('resp-tab-active');
+                            $respTabs.find('[aria-controls=' + $tabAria + ']').addClass('resp-tab-active');
 
                             $respTabs.find('.resp-tab-content[aria-labelledby = ' + $tabAria + ']').slideDown().addClass('resp-tab-content-active');
                         } else {
                             $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
                             $respTabs.find('.resp-tab-content-active').removeAttr('style').removeClass('resp-tab-content-active').removeClass('resp-accordion-closed');
-                            $respTabs.find("[aria-controls=" + $tabAria + "]").addClass('resp-tab-active');
+                            $respTabs.find('[aria-controls=' + $tabAria + ']').addClass('resp-tab-active');
                             $respTabs.find('.resp-tab-content[aria-labelledby = ' + $tabAria + ']').addClass('resp-tab-content-active').attr('style', 'display:block');
                         }
                         //Trigger tab activation event
@@ -150,4 +150,4 @@
             });
         }
     });
-})(jQuery);
+}(jQuery));
