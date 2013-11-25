@@ -116,7 +116,6 @@
                             $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
                             $respTabs.find('.resp-tab-content-active').slideUp().removeClass('resp-tab-content-active resp-accordion-closed');
                             $respTabs.find('[resp-controls=' + $tabControls + ']').addClass('resp-tab-active');
-
                             $respTabs.find('.resp-tab-content[resp-labelledby = ' + $tabControls + ']').slideDown().addClass('resp-tab-content-active');
                         } else {
                             $respTabs.find('.resp-tab-active').removeClass('resp-tab-active');
